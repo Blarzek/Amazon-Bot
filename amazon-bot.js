@@ -16,7 +16,7 @@
 
 
 //------------------------------------------------------------------------
-//                        CONSTANTES
+//                        OPCIONES PERSONALIZABLES
 //------------------------------------------------------------------------
 
 // B09L1WNR1V - Elden Ring - Collector's Edition - PS5
@@ -30,17 +30,13 @@ const LISTA_ID_PRODUCTOS = ["B09L1WNR1V", "B09L1XZ9RZ", "B09L1X7YFN", "B09L1WN9N
 const LISTA_PRECIOS_LIMITES = [200, 200, 200, 200, 30];
 
 
-//------------------------------------------------------------------------
-//                        OPCIONES PERSONALIZABLES
-//------------------------------------------------------------------------
-
 // No funciona deshabilitarlo con reservas
 const USAR_BOTON_COMPRAR_YA = false;
 const REPRODUCIR_SONIDOS = true;
 
 
 // TIEMPOS DE FUNCIONAMIENTO
-
+// Tiempo en segundos que se toma de base para generar el retraso aleatorio
 const SEGUNDOS_RETRASO_ACTUALIZACION = 10;
 
 // Tiempo aleatorio en milisegundos que tarda en actualizar la pagina si no se encuentra el producto
@@ -79,6 +75,7 @@ var sonidoItemUsed = new Audio("https://github.com/Blarzek/Amazon-Bot/blob/maste
 
 if (document.getElementsByClassName("a-box a-alert a-alert-info a-spacing-base").length > 0) {
 
+        // Notificar aparicion de Captcha
         console.log(document.getElementsByClassName("a-box a-alert a-alert-info a-spacing-base"))
         console.log('Debes introducir un Captcha.')
 
