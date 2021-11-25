@@ -53,6 +53,7 @@ const TIEMPO_OPERACION = 3000;
 const URL_ACTUAL = document.URL
 const PROMISE = ms => new Promise(res => setTimeout(res, ms));
 const REGEXP_PRECIO = /\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}){1}/g;
+const MODO_DEV = true;
 
 // Sonidos
 
@@ -75,13 +76,14 @@ var sonidoItemUsed = new Audio("https://github.com/Blarzek/Amazon-Bot/blob/maste
 if (document.getElementsByClassName("a-box a-alert a-alert-info a-spacing-base").length > 0) {
 
         // Notificar aparicion de Captcha
-        console.log(document.getElementsByClassName("a-box a-alert a-alert-info a-spacing-base"))
-
         if (REPRODUCIR_SONIDOS) {
                 sonidoFound.play();
         }
 
-        console.log('Debes introducir un Captcha.')
+        if (MODO_DEV) {
+                console.log('Debes introducir un Captcha.')
+        }
+
         alert("Debes introducir un Captcha.");
 
 }
@@ -137,26 +139,29 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
                 document.body.appendChild($ventana);
                 $ventana.style.transform = "translate(0, 0)";
 
-                // DEBUG
-                console.log('ID de producto: ' + ID_PRODUCTO);
-                console.log('Precio limite: ' + PRECIO_LIMITE);
-
-                // Obtenemos el nombre del producto
-                var nombreProducto = document.getElementsByClassName("a-size-large product-title-word-break");
-                console.log('Nombre del producto: ' + nombreProducto[0].innerHTML.trim());
-                console.log('-----------------------------------------------------------------------------');
+                if (MODO_DEV) {
+                        // DEBUG
+                        console.log('ID de producto: ' + ID_PRODUCTO);
+                        console.log('Precio limite: ' + PRECIO_LIMITE);
+                        
+                        // Obtenemos el nombre del producto
+                        var nombreProducto = document.getElementsByClassName("a-size-large product-title-word-break");
+                        console.log('Nombre del producto: ' + nombreProducto[0].innerHTML.trim());
+                        console.log('-----------------------------------------------------------------------------');
+                }
 
                 // Pagina principal del producto
                 // Si nos encontramos en la pagina principal del producto, ¿el producto tiene precio disponible?
                 if (document.getElementById("priceblock_ourprice") || document.getElementById("priceblock_dealprice")) {
 
-                        console.log("¡Producto en stock!");
-
                         if (REPRODUCIR_SONIDOS) {
                                 sonidoCodecOpen.play();
                         }
 
-                        console.log("Obteniendo precio del producto...");
+                        if (MODO_DEV) {
+                                console.log("¡Producto en stock!");
+                                console.log("Obteniendo precio del producto...");
+                        }
 
                         // Obtenemos el precio desde la pagina principal del producto
                         if (document.getElementById("priceblock_ourprice")) {
@@ -175,14 +180,18 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
                         document.body.appendChild($badge);
                         $badge.style.transform = "translate(0, 0)";
 
-                        console.log('#################################################################################');
-                        console.log('Precio del producto: ' + precioProducto + ' - PRECIO_LIMITE: ' + PRECIO_LIMITE);
-                        console.log('Precio dentro del limite: ' + (precioProducto <= PRECIO_LIMITE ? 'Si' : 'No'));
-                        console.log('#################################################################################');
+                        if (MODO_DEV) {
+                                console.log('#################################################################################');
+                                console.log('Precio del producto: ' + precioProducto + ' - PRECIO_LIMITE: ' + PRECIO_LIMITE);
+                                console.log('Precio dentro del limite: ' + (precioProducto <= PRECIO_LIMITE ? 'Si' : 'No'));
+                                console.log('#################################################################################');
+                        }
 
                         if (precioProducto <= PRECIO_LIMITE) {
 
-                                console.log('Agregando a la cesta...');
+                                if (MODO_DEV) {
+                                        console.log('Agregando a la cesta...');
+                                }
 
                                 if (REPRODUCIR_SONIDOS) {
                                         sonidoItemEquip.play();
@@ -200,7 +209,9 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 
                         } else {
 
-                                console.log('El precio supera el limite');
+                                if (MODO_DEV) {
+                                        console.log('El precio supera el limite');
+                                }
 
                                 // Refrescamos la pagina del producto
                                 setTimeout(function() {
@@ -212,10 +223,18 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 
                         var tiempo = RETRASO_ACTUALIZACION / 1000;
                         tiempo = Math.round((tiempo + Number.EPSILON) * 100) / 100;
+
                         const $ventana = crearVentanaInfo('Producto no disponible', "Refrescando en " + tiempo + " segundos...");
-                        console.log('No se pudo obtener el precio del producto');
                         document.body.appendChild($ventana);
                         $ventana.style.transform = "translate(0, 0)"
+
+                        if (MODO_DEV) {
+                                console.log('No se pudo obtener el precio del producto');
+
+                                if (REPRODUCIR_SONIDOS) {
+                                        sonidoDoorBuzz.play();
+                                }
+                        }
 
                         // Refrescamos la pagina del producto
                         setTimeout(function() {
@@ -240,8 +259,12 @@ if (URL_ACTUAL.includes('/gp/buy/spc/handlers/')) {
         }
 
         setTimeout(function() {
-                // Finalizamos la compra
-                document.getElementsByName("placeYourOrder1")[0].click();
+                if (MODO_DEV) {
+                        alert("Has completado tu pedido.");
+                } else {
+                        // Finalizamos la compra
+                        document.getElementsByName("placeYourOrder1")[0].click();
+                }
         }, TIEMPO_OPERACION)
 
 }
@@ -262,7 +285,9 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
                 } else if (typeof document.getElementById("g") !== 'undefined' && document.getElementById("g") !== null && document.getElementById("g").innerHTML.includes('ref=cs_503_link') == true) {
 
                         // Error en cesta
-                        console.log('Amazon 503 Cart error');
+                        if (MODO_DEV) {
+                                console.log('Amazon 503 Cart error');
+                        }
 
                         if (REPRODUCIR_SONIDOS) {
                                 sonidoDoorBuzz.play();
@@ -273,7 +298,7 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
                                 location.href = 'https://www.amazon.es/gp/cart/view.html'
                         }, TIEMPO_OPERACION)
 
-                } else {
+                } else if (MODO_DEV) {
                         console.log('Cesta de Amazon vacia')
                 }
 
@@ -284,7 +309,9 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
 // Pagina de confirmacion de agregado a la cesta
 else if (URL_ACTUAL.includes('/gp/huc/view')) {
 
-        console.log(URL_ACTUAL);
+        if (MODO_DEV) {
+                console.log(URL_ACTUAL);
+        }
 
         if (REPRODUCIR_SONIDOS) {
                 sonidoItemUsed.play();
@@ -292,7 +319,10 @@ else if (URL_ACTUAL.includes('/gp/huc/view')) {
 
         setTimeout(function() {
                 if (document.getElementsByClassName("a-color-price hlb-price a-inline-block a-text-bold")) {
-                        console.log('*** Tramitar pedido ***');
+                        if (MODO_DEV) {
+                                console.log('*** Tramitar pedido ***');
+                        }
+
                         document.getElementById("hlb-ptc-btn-native").click();
                 }
         }, TIEMPO_OPERACION)
