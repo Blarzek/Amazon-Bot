@@ -1,7 +1,6 @@
 // ==UserScript==
-// @name     Amazon-Bot
-// @include  https://www.amazon.es/*
-// @include  http://localhost:800*
+// @name         Amazon-Bot
+// @include      https://www.amazon.es/*
 // @version      v1.0
 // @description  try to take over the world!
 // @author       Blarzek
@@ -31,7 +30,7 @@ const LISTA_PRECIOS_LIMITES = [200, 200, 200, 200, 30];
 
 
 // No funciona deshabilitarlo con reservas
-const USAR_BOTON_COMPRAR_YA = false;
+const USAR_BOTON_COMPRAR_YA = true;
 const REPRODUCIR_SONIDOS = true;
 
 
@@ -52,7 +51,7 @@ const TIEMPO_OPERACION = 3000;
 //------------------------------------------------------------------------
 
 const URL_ACTUAL = document.URL
-const promise = ms => new Promise(res => setTimeout(res, ms));
+const PROMISE = ms => new Promise(res => setTimeout(res, ms));
 const REGEXP_PRECIO = /\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}){1}/g;
 
 // Sonidos
@@ -77,11 +76,13 @@ if (document.getElementsByClassName("a-box a-alert a-alert-info a-spacing-base")
 
         // Notificar aparicion de Captcha
         console.log(document.getElementsByClassName("a-box a-alert a-alert-info a-spacing-base"))
-        console.log('Debes introducir un Captcha.')
 
         if (REPRODUCIR_SONIDOS) {
                 sonidoFound.play();
         }
+
+        console.log('Debes introducir un Captcha.')
+        alert("Debes introducir un Captcha.");
 
 }
 
@@ -187,13 +188,15 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
                                         sonidoItemEquip.play();
                                 }
 
-                                if (USAR_BOTON_COMPRAR_YA) {
-                                        // Hacemos clic en el boton de "Comprar ya"
-                                        document.getElementsByName("submit.buy-now")[0].click();
-                                } else {
-                                        // Hacemos clic en el boton
-                                        document.getElementsByName("submit.add-to-cart")[0].click();
-                                }
+                                setTimeout(function() {
+                                        if (USAR_BOTON_COMPRAR_YA) {
+                                                // Hacemos clic en el boton de "Comprar ya"
+                                                document.getElementsByName("submit.buy-now")[0].click();
+                                        } else {
+                                                // Hacemos clic en el boton
+                                                document.getElementsByName("submit.add-to-cart")[0].click();
+                                        }
+                                }, TIEMPO_OPERACION)
 
                         } else {
 
@@ -230,7 +233,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 //------------------------------------------------------------------------
 
 // Pagina Tramitar pedido
-if (document.URL.includes('/gp/buy/spc/handlers/')) {
+if (URL_ACTUAL.includes('/gp/buy/spc/handlers/')) {
 
         if (REPRODUCIR_SONIDOS) {
                 sonidoItemUsed.play();
@@ -238,23 +241,23 @@ if (document.URL.includes('/gp/buy/spc/handlers/')) {
 
         setTimeout(function() {
                 // Finalizamos la compra
-                console.log('Comprar ahora');
                 document.getElementsByName("placeYourOrder1")[0].click();
         }, TIEMPO_OPERACION)
 
 }
 
 // Pagina Cesta
-else if (document.URL.includes('/gp/cart/view')) {
-
-        console.log("URL: " + document.URL + " - Incluye (/gp/cart/view): " + document.URL.includes('/gp/cart/view'))
+else if (URL_ACTUAL.includes('/gp/cart/view')) {
 
         setTimeout(function() {
 
                 // Comprobamos si hay algun producto en la cesta si se puede obtener un elemento con la clase que tiene el precio del producto
                 if (document.getElementsByClassName("a-size-medium a-color-base sc-price sc-white-space-nowrap").length > 0) {
-                        // Redireccionamos a la pantalla de "Tramitar pedido"
-                        location.href = 'https://www.amazon.es/gp/buy/spc/handlers/display.html?hasWorkingJavascript=1'
+
+                        setTimeout(function() {
+                                // Redireccionamos a la pantalla de "Tramitar pedido"
+                                location.href = 'https://www.amazon.es/gp/buy/spc/handlers/display.html?hasWorkingJavascript=1'
+                        }, TIEMPO_OPERACION)
 
                 } else if (typeof document.getElementById("g") !== 'undefined' && document.getElementById("g") !== null && document.getElementById("g").innerHTML.includes('ref=cs_503_link') == true) {
 
@@ -279,9 +282,9 @@ else if (document.URL.includes('/gp/cart/view')) {
 }
 
 // Pagina de confirmacion de agregado a la cesta
-else if (document.URL.includes('/gp/huc/view')) {
+else if (URL_ACTUAL.includes('/gp/huc/view')) {
 
-        console.log(document.URL);
+        console.log(URL_ACTUAL);
 
         if (REPRODUCIR_SONIDOS) {
                 sonidoItemUsed.play();
@@ -297,7 +300,7 @@ else if (document.URL.includes('/gp/huc/view')) {
 }
 
 // Pagina de Pedido realizado
-else if (document.URL.includes('/gp/buy/thankyou/handlers')) {
+else if (URL_ACTUAL.includes('/gp/buy/thankyou/handlers')) {
 
         if (REPRODUCIR_SONIDOS) {
                 sonidoCodecOver.play();
