@@ -53,7 +53,7 @@ const TIEMPO_OPERACION = 3000;
 const URL_ACTUAL = document.URL
 const PROMISE = ms => new Promise(res => setTimeout(res, ms));
 const REGEXP_PRECIO = /\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}){1}/g;
-const MODO_DEV = true;
+const MODO_DEV = false;
 
 // Sonidos
 
@@ -67,6 +67,130 @@ var sonidoGameOver = new Audio("https://github.com/Blarzek/Amazon-Bot/blob/maste
 var sonidoItemEquip = new Audio("https://github.com/Blarzek/Amazon-Bot/blob/master/resources/sounds/itemequip.wav?raw=true");
 var sonidoItemOpen = new Audio("https://github.com/Blarzek/Amazon-Bot/blob/master/resources/sounds/itemopen.wav?raw=true");
 var sonidoItemUsed = new Audio("https://github.com/Blarzek/Amazon-Bot/blob/master/resources/sounds/itemused.wav?raw=true");
+
+
+// VENTANA DE INFORMACION
+function crearVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINALIZADA) {
+
+        const $contenedor = document.createElement("div");
+
+        const $cabecera = document.createElement("p");
+        const $separador = document.createElement("p");
+        const $info = document.createElement("p");
+        const $status = document.createElement("p");
+        const $loadingSpinner = document.createElement("p");
+
+        // Textos
+        if (ID_PRODUCTO != null && PRECIO_LIMITE != null) {
+                $cabecera.innerText = "Amazon-Bot   -   ID del producto: " + ID_PRODUCTO + "   -   Precio limite: " + PRECIO_LIMITE;
+        } else {
+                $cabecera.innerText = "Amazon-Bot";
+        }
+        $separador.innerText = ("------------------------------------------------------------------------------------------------------------------------------------ ");
+        $info.innerText = info;
+        $status.innerText = status;
+        $loadingSpinner.innerText = "■";
+
+        // Aplicamos clases
+        $contenedor.className = "contenedor";
+        $cabecera.className = "cabecera";
+        $separador.className = "separador";
+        $info.className = "infoText";
+        $status.className = "statusText";
+        $loadingSpinner.className = "loadingSpinner rotating";
+
+        var styleCss = `
+                .contenedor {
+                        position: fixed;
+                        left: 0;
+                        bottom: 0;
+                        width: 823px;
+                        height: 180px;
+                        background: #232f3e;
+                        border: 1px solid #FFF;
+                }
+
+                .cabecera {
+                        position: absolute;
+                        display: block;
+                        top: 3px;
+                        left: 50px;
+                        background: transparent;
+                        color: #ffbe68;
+                }
+
+                .separador {
+                        position: absolute;
+                        display: block;
+                        top: 22px;
+                        left: 50px;
+                        background: transparent;
+                        color: #a6e7cf;
+                }
+
+                .infoText {
+                        position: absolute;
+                        display: block;
+                        top: 43px;
+                        left: 50px;
+                        background: transparent;
+                        color: white;
+                }
+
+                .statusText {
+                        position: absolute;
+                        display: block;
+                        top: 64px;
+                        left: 50px;
+                        background: transparent;
+                        color: white;
+                }
+
+                .loadingSpinner {
+                        position: absolute;
+                        display: block;
+                        top: 110px;
+                        left: 411px;
+                        color: white;
+                        font-size: 30pt;
+                        -webkit-animation: rotating 2s linear infinite;
+                        animation: rotating 2s linear infinite;
+                }
+
+                @-webkit-keyframes rotating {
+                        from {
+                                -webkit-transform: rotate(0deg);
+                                transform: rotate(0deg);
+                        }
+                        to {
+                                -webkit-transform: rotate(360deg);
+                                transform: rotate(360deg);
+                        }
+                }
+        `;
+
+        var styleSheet = document.createElement("style");
+        styleSheet.innerText = styleCss;
+        $contenedor.appendChild(styleSheet);
+
+        // Agregamos los elementos al contenedor
+        $contenedor.appendChild($cabecera);
+        $contenedor.appendChild($separador);
+        $contenedor.appendChild($info);
+        $contenedor.appendChild($status);
+
+        if (!COMPRA_FINALIZADA) {
+                $contenedor.appendChild($loadingSpinner);
+        }
+
+        return $contenedor;
+}
+
+function mostrarVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINALIZADA) {
+        var $ventana = crearVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINALIZADA);
+        document.body.appendChild($ventana);
+        $ventana.style.transform = "translate(0, 0)";
+}
 
 
 //------------------------------------------------------------------------
@@ -97,53 +221,19 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
         const ID_PRODUCTO = LISTA_ID_PRODUCTOS[i]
         const PRECIO_LIMITE = LISTA_PRECIOS_LIMITES[i]
 
-        // VENTANA DE INFORMACION
-        function crearVentanaInfo(mode, status, ht = 160) {
-
-                const $contenedor = document.createElement("div");
-                const $fondo = document.createElement("div");
-
-                const $texto = document.createElement("P");
-                const $borde = document.createElement("P");
-                const $mode = document.createElement("P");
-                const $status = document.createElement("P");
-
-                var TITULO_VENTANA = ("Amazon-Bot   -   ID del producto: " + ID_PRODUCTO + "   -   Precio limite: " + PRECIO_LIMITE);
-                $borde.innerText = ("------------------------------------------------------------------------------------------------------------------------------------ ");
-                $texto.innerText = TITULO_VENTANA;
-                $mode.innerText = mode;
-                $status.innerText = status;
-
-                // Estilo
-                $contenedor.style.cssText = "position:fixed; left:0; bottom:0; width:950px; height:" + ht + "px; background: #232f3e; border: 1px solid #FFF";
-                $fondo.style.cssText = "position:absolute; left:-100%; top:0; width:60px; height:350px; background: #1111; box-shadow: 0px 0 10px #060303; border: 1px solid #FFF; border-radius: 3px;";
-                $texto.style.cssText = "position:absolute; display:block; top:3px; left: 50px; background: transparent; color: white;";
-                $borde.style.cssText = "position:absolute; display:block; top:22px; left: 50px; background: transparent; color: #a6e7cf;";
-                $mode.style.cssText = "position:absolute; display:block; top:43px; left: 50px; background: transparent; color: white;";
-                $status.style.cssText = "position:absolute; display:block; top:64px; left: 50px; background: transparent; color: white;";
-
-                // Agregamos los elementos al contenedor
-                $contenedor.appendChild($texto);
-                $contenedor.appendChild($borde);
-                $contenedor.appendChild($mode);
-                $contenedor.appendChild($status)
-                return $contenedor;
-        }
 
 
         // Si la URL_ACTUAL contiene la ID_PRODUCTO, se ejecuta el codigo principal
         if (URL_ACTUAL.includes(ID_PRODUCTO)) {
 
-                // ACTUALIZACION DE LA VENTANA
-                var $ventana = crearVentanaInfo("Iniciando...", "Inicializando...");
-                document.body.appendChild($ventana);
-                $ventana.style.transform = "translate(0, 0)";
+                // ACTUALIZACION DE LA VENTANA DE INFORMACION
+                mostrarVentanaInfo("Iniciando...", "Inicializando...", ID_PRODUCTO, PRECIO_LIMITE);
 
                 if (MODO_DEV) {
                         // DEBUG
                         console.log('ID de producto: ' + ID_PRODUCTO);
                         console.log('Precio limite: ' + PRECIO_LIMITE);
-                        
+
                         // Obtenemos el nombre del producto
                         var nombreProducto = document.getElementsByClassName("a-size-large product-title-word-break");
                         console.log('Nombre del producto: ' + nombreProducto[0].innerHTML.trim());
@@ -176,9 +266,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
                         precioProducto = parseFloat(precioProducto.toString().replace(',', '.'));
 
                         var precioProductoText = 'Precio del producto: ' + precioProducto;
-                        const $badge = crearVentanaInfo(precioProductoText, 'Procesando...');
-                        document.body.appendChild($badge);
-                        $badge.style.transform = "translate(0, 0)";
+                        mostrarVentanaInfo(precioProductoText, 'Procesando...', ID_PRODUCTO, PRECIO_LIMITE);
 
                         if (MODO_DEV) {
                                 console.log('#################################################################################');
@@ -224,9 +312,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
                         var tiempo = RETRASO_ACTUALIZACION / 1000;
                         tiempo = Math.round((tiempo + Number.EPSILON) * 100) / 100;
 
-                        const $ventana = crearVentanaInfo('Producto no disponible', "Refrescando en " + tiempo + " segundos...");
-                        document.body.appendChild($ventana);
-                        $ventana.style.transform = "translate(0, 0)"
+                        mostrarVentanaInfo('Producto no disponible', "Refrescando en " + tiempo + " segundos...", ID_PRODUCTO, PRECIO_LIMITE);
 
                         if (MODO_DEV) {
                                 console.log('No se pudo obtener el precio del producto');
@@ -254,6 +340,8 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 // Pagina Tramitar pedido
 if (URL_ACTUAL.includes('/gp/buy/spc/handlers/')) {
 
+        mostrarVentanaInfo("Tramitar pedido", "Finalizando compra...");
+
         if (REPRODUCIR_SONIDOS) {
                 sonidoItemUsed.play();
         }
@@ -271,6 +359,8 @@ if (URL_ACTUAL.includes('/gp/buy/spc/handlers/')) {
 
 // Pagina Cesta
 else if (URL_ACTUAL.includes('/gp/cart/view')) {
+
+        mostrarVentanaInfo("Cesta", "Tramitando pedido...");
 
         setTimeout(function() {
 
@@ -306,15 +396,24 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
 
 }
 
+// Manejador de caja de compra
+else if (URL_ACTUAL.includes('/gp/product/handle-buy-box')) {
+
+        location.href = 'https://www.amazon.es/gp/huc/view.html'
+
+}
+
 // Pagina de confirmacion de agregado a la cesta
 else if (URL_ACTUAL.includes('/gp/huc/view')) {
+
+        mostrarVentanaInfo("Cesta", "Producto agregado a la cesta");
 
         if (MODO_DEV) {
                 console.log(URL_ACTUAL);
         }
 
         if (REPRODUCIR_SONIDOS) {
-                sonidoItemUsed.play();
+                sonidoItemOpen.play();
         }
 
         setTimeout(function() {
@@ -331,6 +430,8 @@ else if (URL_ACTUAL.includes('/gp/huc/view')) {
 
 // Pagina de Pedido realizado
 else if (URL_ACTUAL.includes('/gp/buy/thankyou/handlers')) {
+
+        mostrarVentanaInfo("¡Enhorabuena!", "¡Pedido realizado!", null, null, true);
 
         if (REPRODUCIR_SONIDOS) {
                 sonidoCodecOver.play();
