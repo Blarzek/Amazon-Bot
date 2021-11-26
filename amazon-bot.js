@@ -105,24 +105,27 @@ function crearVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINAL
                         left: 0;
                         bottom: 0;
                         width: 823px;
-                        height: 180px;
+                        height: 190px;
                         background: #232f3e;
-                        border: 1px solid #FFF;
+                        border: 1px solid #131921;
+                        border-radius: 10px;
+                        box-shadow: 0 10px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
                 }
 
                 .cabecera {
                         position: absolute;
                         display: block;
-                        top: 3px;
+                        top: 13px;
                         left: 50px;
                         background: transparent;
                         color: #ffbe68;
+                        font-weight: bold;
                 }
 
                 .separador {
                         position: absolute;
                         display: block;
-                        top: 22px;
+                        top: 32px;
                         left: 50px;
                         background: transparent;
                         color: #a6e7cf;
@@ -131,7 +134,7 @@ function crearVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINAL
                 .infoText {
                         position: absolute;
                         display: block;
-                        top: 43px;
+                        top: 53px;
                         left: 50px;
                         background: transparent;
                         color: white;
@@ -140,7 +143,7 @@ function crearVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINAL
                 .statusText {
                         position: absolute;
                         display: block;
-                        top: 64px;
+                        top: 74px;
                         left: 50px;
                         background: transparent;
                         color: white;
@@ -149,8 +152,8 @@ function crearVentanaInfo(info, status, ID_PRODUCTO, PRECIO_LIMITE, COMPRA_FINAL
                 .loadingSpinner {
                         position: absolute;
                         display: block;
-                        top: 110px;
-                        left: 411px;
+                        top: 120px;
+                        left: 398px;
                         color: white;
                         font-size: 30pt;
                         -webkit-animation: rotating 2s linear infinite;
