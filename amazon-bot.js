@@ -43,7 +43,7 @@ const SEGUNDOS_RETRASO_ACTUALIZACION = 10;
 const RETRASO_ACTUALIZACION = ((Math.random() * 2) + SEGUNDOS_RETRASO_ACTUALIZACION) * 1000;
 
 // Tiempo en milisegundos que tarda en realizar operaciones de compra
-const TIEMPO_OPERACION = 3000;
+const TIEMPO_OPERACION = 1000;
 
 
 //------------------------------------------------------------------------
