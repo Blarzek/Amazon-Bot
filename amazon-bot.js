@@ -22,11 +22,10 @@
 // B09L1XZ9RZ - Elden Ring - Collector's Edition - PC
 // B09L1X7YFN - Elden Ring - Collector's Edition - PS4
 // B09L1WN9N8 - Elden Ring - Collector's Edition - Xbox One
-// B08ZTMKDQ4 - Shin Megami Tensei 3 - PlayStation 4
 
 // Listas con las IDs de producto de Amazon y sus respectivos precios
-const LISTA_ID_PRODUCTOS = ["B09L1WNR1V", "B09L1XZ9RZ", "B09L1X7YFN", "B09L1WN9N8", "B08ZTMKDQ4"];
-const LISTA_PRECIOS_LIMITES = [200, 200, 200, 200, 30];
+const LISTA_ID_PRODUCTOS = ["B09L1WNR1V", "B09L1XZ9RZ", "B09L1X7YFN", "B09L1WN9N8"];
+const LISTA_PRECIOS_LIMITES = [200, 200, 200, 200];
 
 
 // No funciona deshabilitarlo con reservas
@@ -51,6 +50,7 @@ const TIEMPO_OPERACION = 1000;
 //------------------------------------------------------------------------
 
 const URL_ACTUAL = document.URL
+const AMAZON_HOME = "https://www.amazon.es";
 const PROMISE = ms => new Promise(res => setTimeout(res, ms));
 const REGEXP_PRECIO = /\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2}){1}/g;
 const MODO_DEV = false;
@@ -306,7 +306,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 
                                 // Refrescamos la pagina del producto
                                 setTimeout(function() {
-                                        location.href = "https://www.amazon.es/dp/" + ID_PRODUCTO + "/"
+                                        location.href = AMAZON_HOME + "/dp/" + ID_PRODUCTO + "/"
                                 }, RETRASO_ACTUALIZACION)
                         }
 
@@ -327,7 +327,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 
                         // Refrescamos la pagina del producto
                         setTimeout(function() {
-                                location.href = "https://www.amazon.es/dp/" + ID_PRODUCTO + "/"
+                                location.href = AMAZON_HOME + "/dp/" + ID_PRODUCTO + "/"
                         }, RETRASO_ACTUALIZACION)
 
                 }
@@ -372,7 +372,7 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
 
                         setTimeout(function() {
                                 // Redireccionamos a la pantalla de "Tramitar pedido"
-                                location.href = 'https://www.amazon.es/gp/buy/spc/handlers/display.html?hasWorkingJavascript=1'
+                                location.href = AMAZON_HOME + '/gp/buy/spc/handlers/display.html?hasWorkingJavascript=1'
                         }, TIEMPO_OPERACION)
 
                 } else if (typeof document.getElementById("g") !== 'undefined' && document.getElementById("g") !== null && document.getElementById("g").innerHTML.includes('ref=cs_503_link') == true) {
@@ -388,7 +388,7 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
 
                         setTimeout(function() {
                                 // Redireccionamos a la Cesta
-                                location.href = 'https://www.amazon.es/gp/cart/view.html'
+                                location.href = AMAZON_HOME + '/gp/cart/view.html'
                         }, TIEMPO_OPERACION)
 
                 } else if (MODO_DEV) {
@@ -402,7 +402,7 @@ else if (URL_ACTUAL.includes('/gp/cart/view')) {
 // Manejador de caja de compra
 else if (URL_ACTUAL.includes('/gp/product/handle-buy-box')) {
 
-        location.href = 'https://www.amazon.es/gp/huc/view.html'
+        location.href = AMAZON_HOME + '/gp/huc/view.html'
 
 }
 
