@@ -228,7 +228,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
         if (URL_ACTUAL.includes(ID_PRODUCTO)) {
 
                 // ACTUALIZACION DE LA VENTANA DE INFORMACION
-                mostrarVentanaInfo("Iniciando...", "Inicializando...", ID_PRODUCTO, PRECIO_LIMITE);
+                mostrarVentanaInfo("Iniciando...", "Obteniendo datos necesarios...", ID_PRODUCTO, PRECIO_LIMITE);
 
                 if (MODO_DEV) {
                         // DEBUG
@@ -243,7 +243,7 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
 
                 // Pagina principal del producto
                 // Si nos encontramos en la pagina principal del producto, ¿el producto tiene precio disponible?
-                if (document.getElementById("priceblock_ourprice") || document.getElementById("priceblock_dealprice")) {
+                if (document.getElementById("priceblock_ourprice") || document.getElementById("priceblock_dealprice") || document.getElementsByClassName("a-price a-text-price a-size-medium apexPriceToPay").length == 1) {
 
                         if (REPRODUCIR_SONIDOS) {
                                 sonidoCodecOpen.play();
@@ -257,9 +257,10 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
                         // Obtenemos el precio desde la pagina principal del producto
                         if (document.getElementById("priceblock_ourprice")) {
                                 var precioProducto = document.getElementById("priceblock_ourprice").innerHTML;
-                        }
-                        if (document.getElementById("priceblock_dealprice")) {
+                        } else if (document.getElementById("priceblock_dealprice")) {
                                 precioProducto = document.getElementById("priceblock_dealprice").innerHTML;
+                        } else if (document.getElementsByClassName("a-price a-text-price a-size-medium apexPriceToPay")) {
+                                precioProducto = document.getElementsByClassName("a-price a-text-price a-size-medium apexPriceToPay")[0].getElementsByClassName("a-offscreen")[0].innerHTML;
                         }
 
                         // Parseamos el precio del producto
