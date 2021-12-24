@@ -224,8 +224,6 @@ for (let i = 0; i < LISTA_ID_PRODUCTOS.length; i++) {
         const ID_PRODUCTO = LISTA_ID_PRODUCTOS[i]
         const PRECIO_LIMITE = LISTA_PRECIOS_LIMITES[i]
 
-
-
         // Si la URL_ACTUAL contiene la ID_PRODUCTO, se ejecuta el codigo principal
         if (URL_ACTUAL.includes(ID_PRODUCTO)) {
 
@@ -427,6 +425,17 @@ else if (URL_ACTUAL.includes('/gp/huc/view')) {
 
                         document.getElementById("hlb-ptc-btn-native").click();
                 }
+        }, TIEMPO_OPERACION)
+
+}
+
+// Pagina de metodo de pago (Alemania)
+else if (URL_ACTUAL.includes('/gp/buy/payselect/handlers/display')) {
+
+        setTimeout(function() {
+
+                document.getElementById("pp-GR6CUO-87").click();
+
         }, TIEMPO_OPERACION)
 
 }
